@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Run the complete control flow without external services or model weights.
+MOCK_MODE = os.getenv("RAG_MOCK_MODE", "").strip().lower() in {"1", "true", "yes", "on"}
+
 # --- API Keys ---
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 

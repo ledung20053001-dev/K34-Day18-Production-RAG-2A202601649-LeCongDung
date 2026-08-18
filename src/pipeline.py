@@ -4,6 +4,11 @@ from __future__ import annotations
 
 import os, sys, time
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.m1_chunking import load_documents, chunk_hierarchical
@@ -64,8 +69,8 @@ def run_query(query: str, search: HybridSearch, reranker: CrossEncoderReranker) 
     reranked = reranker.rerank(query, docs, top_k=RERANK_TOP_K)
     contexts = [r.text for r in reranked] if reranked else [r.text for r in results[:3]]
 
-    from config import OPENAI_API_KEY
-    if OPENAI_API_KEY and contexts:
+    from config import MOCK_MODE, OPENAI_API_KEY
+    if OPENAI_API_KEY and contexts and not MOCK_MODE:
         try:
             from openai import OpenAI
             client = OpenAI()
